@@ -1,19 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GridLayout from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
 const Dashboard = () => {
-  const [layout, setLayout] = useState([]);
-  const [widgets, setWidgets] = useState([]);
+  const [layout, setLayout] = useState(
+    () => JSON.parse(localStorage.getItem("layout")) || [],
+  );
+  const [widgets, setWidgets] = useState(
+    () => JSON.parse(localStorage.getItem("widgets")) || [],
+  );
+
+  useEffect(() => {
+    localStorage.setItem("layout", JSON.stringify(layout));
+    localStorage.setItem("widgets", JSON.stringify(widgets));
+  }, [layout, widgets]);
 
   const addWidget = () => {
     const newWidget = {
       i: `widget-${widgets.length}`,
       x: (widgets.length * 2) % 12,
-      y: Infinity, // places it at the bottom
+      y: Infinity,
       w: 2,
-      h: 2
+      h: 2,
     };
     setLayout([...layout, newWidget]);
     setWidgets([...widgets, newWidget]);
